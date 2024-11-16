@@ -3,6 +3,7 @@
     interface ThumbnailItem {
 		title: string;
         description: string;
+        button_color: string;
 	}
 
     interface Props {

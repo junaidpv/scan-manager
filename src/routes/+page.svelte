@@ -2,6 +2,7 @@
   import { invoke } from "@tauri-apps/api/core";
   import Sidebar from "../lib/Sidebar.svelte";
   import LayoutDefault from "$lib/LayoutDefault.svelte";
+  import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
 
   let name = $state("");
   let greetMsg = $state("");
@@ -9,7 +10,24 @@
   
   let page_url = $state('/main');
 
+  function openWindow() {
+    console.log('I am here');
+    const webview = new WebviewWindow('theUniqueLabel', {
+      url: '/create-project',
+    });
+    
+    // since the webview window is created asynchronously,
+    // Tauri emits the `tauri://created` and `tauri://error` to notify you of the creation response
+    webview.once('tauri://created', function () {
+      console.log('success');
+    })
+    webview.once('tauri://error', function (e) {
+      console.log(e);
+    })
+  }
+
   async function greet(event) {
+    openWindow();
     event.preventDefault();
     // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
     greetMsg = await invoke("greet", { name });
@@ -22,12 +40,10 @@
       page_url = '/main';
     }
   }
-
   let sidebar_items = [
     {
       title: 'One',
       description: 'A one description',
-      icon: 'envelope-heart',
       button_color: 'warning',
     },
     {
@@ -37,6 +53,7 @@
       button_color: 'danger',
     }
   ];
+
 </script>
 
 <main class="container-fluid">
