@@ -4,13 +4,14 @@
   "description": "Capability for the main window",
   "windows": [
     "main",
-    "theUniqueLabel"
+    "create-project"
   ],
   "permissions": [
     "core:default",
     "shell:allow-open",
     "core:webview:allow-create-webview-window",
     "dialog:default",
-    "dialog:allow-open"
+    "dialog:allow-open",
+    "core:window:allow-close"
   ]
 }

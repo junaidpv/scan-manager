@@ -12,7 +12,7 @@
 
   function openWindow() {
     console.log('I am here');
-    const webview = new WebviewWindow('theUniqueLabel', {
+    const webview = new WebviewWindow('create-project', {
       url: '/create-project',
     });
     
@@ -30,7 +30,7 @@
     openWindow();
     event.preventDefault();
     // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    greetMsg = await invoke("greet", { name });
+    greetMsg = await invoke("get_project_home_directory", { name });
     if (page == 'main') {
       page = 'misc';
       page_url = '/misc?name=Wonderful';
