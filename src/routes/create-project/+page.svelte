@@ -8,6 +8,8 @@
     let project_name = $state('test');
     let project_location = $state('/test');
     let project_description = $state('test desc');
+    let error = $state(false);
+    let error_message = $state('');
 
     let project_location_button_label = $derived.by(() => {
         if (project_location) {
@@ -37,13 +39,19 @@
         }
     }
     
+    // @ts-ignore
     async function submit(event) {
         event.preventDefault();
         console.log(project_name, project_location, project_description);
-        let created = await invoke("create_project", { projectName: project_name, scanLocation: project_location, description: project_description });
-        console.log(created);
-        if (created) {
+        let response_string = await invoke("create_project", { projectName: project_name, scanLocation: project_location, description: project_description });
+        let response = JSON.parse(response_string)
+        console.log(response);
+        if (response.result) {
             getCurrentWebview().window.close();
+        }
+        else {
+            error = true;
+            error_message = response.message;
         }
     }
 </script>
@@ -52,7 +60,12 @@
 <form>
 <div class="mb-3">
     <label for="projectName" class="form-label">Project Name</label>
-    <input type="project_name" class="form-control" id="projectName" aria-describedby="projectNameHelp" bind:value={project_name}>
+    <input type="project_name" class="form-control" id="projectName" aria-describedby="projectNameHelp" bind:value={project_name}
+    class:is-invalid={error}
+    >
+    <div id="invalidCheck3Feedback" class="invalid-feedback">
+        { error_message }
+    </div>
     <div id="projectNameHelp" class="form-text">A name for the project.</div>
 </div>
 <div class="mb-3">

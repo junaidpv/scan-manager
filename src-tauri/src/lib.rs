@@ -24,24 +24,34 @@ fn get_project_home_directory() -> std::path::PathBuf {
 
 
 #[tauri::command]
-fn create_project(project_name: String, scan_location: String, description: String) -> bool {
+fn create_project(project_name: String, scan_location: String, description: String) -> String {
+    let mut result = false;
+    let mut message = "";
     let app_home: path::PathBuf = get_project_home_directory();
-    let project_dir = app_home.join(project_name.to_lowercase());
-    if !project_dir.exists() {
+    let project_dir = app_home.join("projects").join(project_name.to_lowercase());
+    if project_dir.exists() {
+        message = "Project already exists";
+    }
+    else {
         fs::create_dir_all(project_dir.clone()).ok();
+        let project_info = json::object!{
+            name: project_name,
+            scan_location: scan_location,
+            description: description
+        };
+    
+        let project_info_file = project_dir.join("project.json");
+    
+        fs::write(project_info_file.into_os_string().into_string().unwrap(), json::stringify(project_info)).expect("Unable to write file");
+        result = true;
+        message = "Project created";
     }
 
-    let project_info = json::object!{
-        name: project_name,
-        scan_location: scan_location,
-        description: description
-    };
 
-    let project_info_file = project_dir.join("project.json");
-
-    fs::write(project_info_file.into_os_string().into_string().unwrap(), json::stringify(project_info)).expect("Unable to write file");
-
-    return true;
+    return json::stringify(json::object!{
+        result: result,
+        message: message
+    });
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

@@ -26,6 +26,7 @@
     })
   }
 
+  // @ts-ignore
   async function greet(event) {
     openWindow();
     event.preventDefault();
@@ -45,6 +46,7 @@
       title: 'One',
       description: 'A one description',
       button_color: 'warning',
+      icon: null,
     },
     {
       title: 'Two',
