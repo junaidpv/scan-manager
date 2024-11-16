@@ -1,18 +1,18 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "tauri-app",
+  "productName": "scan-app",
   "version": "0.1.0",
-  "identifier": "com.tauri-app.app",
+  "identifier": "com.idaf.scan-app",
   "build": {
     "beforeDevCommand": "yarn dev",
-    "devUrl": "http://localhost:1420",
+    "devUrl": "http://localhost:1421",
     "beforeBuildCommand": "yarn build",
     "frontendDist": "../build"
   },
   "app": {
     "windows": [
       {
-        "title": "tauri-app",
+        "title": "Scan App",
         "width": 800,
         "height": 600
       }
