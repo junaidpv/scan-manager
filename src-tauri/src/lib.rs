@@ -75,14 +75,30 @@ fn list_directory_names<P: AsRef<Path>>(path: P) -> io::Result<Vec<String>> {
     Ok(dir_names)
 }
 
+fn get_project_info(project_name: String) -> io::Result<json::JsonValue> {
+    let projects_dir = get_projects_directory();
+    let project_dir = projects_dir.join(project_name);
+    let project_info_file = project_dir.join("project.json");
+    let project_info = fs::read_to_string(project_info_file)?;
+
+    Ok(json::parse(&project_info).unwrap())
+}
+
 #[tauri::command]
 fn get_projects() -> String {
     let projects_dir = get_projects_directory();
     let mut result = true;
     let mut dir_names: Vec<String> =  Vec::new();
+    let mut project_infos: Vec<json::JsonValue> = Vec::new();
     let result_call = list_directory_names(projects_dir);
     if result_call.is_ok() {
         dir_names  = result_call.unwrap();
+        for dir_name in dir_names.iter() {
+            let project_info = get_project_info(dir_name.clone());
+            if project_info.is_ok() {
+                project_infos.push(project_info.unwrap());
+            }
+        }
     }
     else {
         result = false;
@@ -90,7 +106,7 @@ fn get_projects() -> String {
 
     return json::stringify(json::object!{
         result: result,
-        names: dir_names
+        projects: project_infos
     });
 }
 

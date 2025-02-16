@@ -1,20 +1,19 @@
-<script>
+<script lang="ts">
     import { invoke } from "@tauri-apps/api/core";
-    import {onMount} from 'svelte'
+    import { onMount } from 'svelte'
 
-    let projects = $state();
+    let projects: ProjectItem[] = $state([]);
     let success = $state(false);
+    // To keep error message.
     let error_message = $state('Getting projects ...');
-
-    // projects = invoke("get_projects");
     
     onMount(async () => {
         try {
-            let response_string = await invoke("get_projects");
+            let response_string: string = await invoke("get_projects");
             let response = JSON.parse(response_string)
             console.log(response);
             if (response.result) {
-                projects = response.names;
+                projects = response.projects;
                 success = true;
             }
             else {
@@ -26,9 +25,24 @@
     })
 </script>
 <div class="container-fluid">
-    {#each projects as project_name}
-        <button>{project_name}</button>
-    {/each}
+    {#if projects.length != 0}
+    <div class="row">
+        {#each projects as project}
+            <div class="col col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{project.name}</h5>
+                        <dl class="card-text">
+                            <dt>Location</dt><dd>{project.scan_location}</dd>
+                            <dt>Description</dt><dd>{project.description}</dd>
+                        </dl>
+                        <button type="button" class="btn btn-primary">Open</button>
+                    </div>
+                </div>
+            </div>
+        {/each}
+    </div>
+    {/if}
     {#if !success}
         <p>{error_message}</p>
     {/if}
