@@ -3,8 +3,10 @@
 </script>
 <div class="row">
     <header class="col-12">
-        {@render menu()}
-        {@render project_info()}
+        <div class="row">
+            <div class="col-2">{@render menu()}</div>
+            <div class="col-10">{@render project_info()}</div>
+        </div>
     </header>
     <div class="col-1 limit-height">{@render first_sidebar()}</div>
     <div class="col-10 limit-height">{@render content()}</div>
