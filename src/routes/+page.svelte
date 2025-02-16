@@ -53,10 +53,10 @@
   }
   let sidebar_items = [
     {
-      title: 'One',
-      description: 'A one description',
-      button_color: 'warning',
-      icon: null,
+      title: 'Scan',
+      description: 'Scan the project folder for scans',
+      button_color: 'primary',
+      icon: 'search',
     },
     {
       title: 'Two',
