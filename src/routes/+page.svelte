@@ -74,6 +74,29 @@
     project = event.payload.projectData;
   });
 
+  function openProjectWindow() {
+    const webview = new WebviewWindow('open-project', {
+      url: '/open-project',
+    });
+    
+    // since the webview window is created asynchronously,
+    // Tauri emits the `tauri://created` and `tauri://error` to notify you of the creation response
+    webview.once('tauri://created', function (e) {
+      console.log('success', e);
+    })
+    webview.once('tauri://error', function (e) {
+      console.log(e);
+    })
+    webview.once('tauri://closed', function (e) {
+      console.log(e);
+    })
+  }
+
+  // @ts-ignore
+  async function onOpenProjectMenuClick(event) {
+    openProjectWindow();
+  }
+
 </script>
 
 <main class="container-fluid">
@@ -85,7 +108,7 @@
         </button>
         <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="#" onclick={onCreateProjectMenuClick}>Create Project ...</a></li>
-            <li><a class="dropdown-item" href="#">Open Project ...</a></li>
+            <li><a class="dropdown-item" href="#" onclick="{onOpenProjectMenuClick}">Open Project ...</a></li>
             <li><a class="dropdown-item" href="#">Exit</a></li>
         </ul>
       </div>

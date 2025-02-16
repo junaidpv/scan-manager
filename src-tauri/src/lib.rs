@@ -3,6 +3,9 @@ use std::fs;
 use std::path;
 use json;
 use std::io;
+use std::path::Path;
+use serde_json::Value;
+use serde_json::json as serde_json;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
@@ -55,8 +58,25 @@ fn create_project(project_name: String, scan_location: String, description: Stri
     });
 }
 
+fn list_directory_names<P: AsRef<Path>>(path: P) -> io::Result<Vec<String>> {
+    let mut dir_names = Vec::new();
+
+    for entry in fs::read_dir(path)? {
+        let entry = entry?;
+        let path = entry.path();
+
+        if path.is_dir() {
+            if let Some(dir_name) = path.file_name().and_then(|name| name.to_str()) {
+                dir_names.push(dir_name.to_string());
+            }
+        }
+    }
+
+    Ok(dir_names)
+}
+
 #[tauri::command]
-fn get_projects() -> io::Result<Vec<String>> {
+fn get_projects() -> String {
     let projects_dir = get_projects_directory();
     // let mut vec = vec![];
     // let mut dir_names = Vec::new();
@@ -72,19 +92,19 @@ fn get_projects() -> io::Result<Vec<String>> {
     // return json::stringify(json::object!{
     //     projects: vec
     // });
-    let mut dir_names = Vec::new();
-    for entry in fs::read_dir(projects_dir)? {
-        let entry = entry?;
-        let path = entry.path();
+    let result = true;
+    // let mut dir_names = Vec::new();
+    let dir_names = match list_directory_names(projects_dir) {
+        Ok(projects_dir) => projects_dir,
+        Err(_e) => Vec::new()
+    };
+    // let json_value: Value = serde_json!(dir_names); // Convert Vec<String> to JSON
+    // Ok(json_value.to_string()); // Serialize JSON to a string
 
-        if path.is_dir() {
-            if let Some(dir_name) = path.file_name().and_then(|name| name.to_str()) {
-                dir_names.push(dir_name.to_string());
-            }
-        }
-    }
-
-    Ok(dir_names)
+    return json::stringify(json::object!{
+        result: result,
+        names: dir_names
+    });
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -94,6 +114,7 @@ pub fn run() {
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![greet])
         .invoke_handler(tauri::generate_handler![create_project])
+        .invoke_handler(tauri::generate_handler![get_projects])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
