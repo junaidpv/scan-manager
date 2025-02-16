@@ -3,10 +3,10 @@
   import Sidebar from "../lib/Sidebar.svelte";
   import LayoutDefault from "$lib/LayoutDefault.svelte";
   import ProjectInfo from "$lib/ProjectInfo.svelte";
-  import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
   import { emit, listen } from '@tauri-apps/api/event'
   import Thumbnails from "$lib/Thumbnails.svelte";
   import { convertFileSrc } from '@tauri-apps/api/core';
+  import { openWindow } from "$lib/common";
 
   let project: ProjectItem | null = $state(null);
   
@@ -47,35 +47,6 @@
     // event.payload is the payload object
     project = (event.payload as { projectData: ProjectItem }).projectData;
   });
-
-  function openWindow(child_window: ChildWindow, disable_parent: Function) {
-    const webview = new WebviewWindow(child_window.name, {url: child_window.url, title: child_window.title});
-
-    disable_parent();
-    
-    // since the webview window is created asynchronously,
-    // Tauri emits the `tauri://created` and `tauri://error` to notify you of the creation response
-    webview.once('tauri://created', function (e) {
-      if (child_window.created_callback) {
-        child_window.created_callback(e);
-      }
-    })
-    webview.once('tauri://error', function (e) {
-      if (child_window.error_callback) {
-        child_window.error_callback(e);
-      }
-    })
-    webview.once('tauri://closed', function (e) {
-      if (child_window.close_callback) {
-        child_window.close_callback(e);
-      }
-    })
-    webview.once("tauri://close-requested", function (e) {
-      if (child_window.close_callback) {
-        child_window.close_callback(e);
-      }
-    })
-  }
 
   let create_project_window: ChildWindow = {
     name: 'create-project',
