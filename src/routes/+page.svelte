@@ -100,13 +100,15 @@
         <ProjectInfo project={project} />
       {/if}
     {/snippet}
-    {#snippet sidebar()}
+    {#snippet first_sidebar()}
       <Sidebar items={sidebar_items} />
     {/snippet}
     {#snippet  content()}
       <iframe src={page_url} title="Title"></iframe>
-      <Thumbnails thumbnails={thumbnails} />
     {/snippet}
+    {#snippet second_sidebar()}
+      <Thumbnails thumbnails={thumbnails} />
+    {/snippet}  
   </LayoutDefault>
 </main>
 
