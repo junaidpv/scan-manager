@@ -78,11 +78,15 @@ fn list_directory_names<P: AsRef<Path>>(path: P) -> io::Result<Vec<String>> {
 #[tauri::command]
 fn get_projects() -> String {
     let projects_dir = get_projects_directory();
-    let result = true;
-    let dir_names = match list_directory_names(projects_dir) {
-        Ok(projects_dir) => projects_dir,
-        Err(_e) => Vec::new()
-    };
+    let mut result = true;
+    let mut dir_names: Vec<String> =  Vec::new();
+    let result_call = list_directory_names(projects_dir);
+    if result_call.is_ok() {
+        dir_names  = result_call.unwrap();
+    }
+    else {
+        result = false;
+    }
 
     return json::stringify(json::object!{
         result: result,
