@@ -1,0 +1,14 @@
+{
+    "identifier": "com.idaf.scan-app",
+    "app": {
+        "security": {
+            "assetProtocol": {
+                "scope": {
+                    "allow": [
+                        "/**"
+                    ]
+                }
+            }
+        }
+    }
+}
