@@ -2,6 +2,7 @@
     import { invoke } from "@tauri-apps/api/core";
     import { getCurrentWebview } from "@tauri-apps/api/webview";
     import { open } from '@tauri-apps/plugin-dialog';
+    import { emit, listen } from '@tauri-apps/api/event'
     // when using `"withGlobalTauri": true`, you may use
     // const { open } = window.__TAURI__.dialog;
 
@@ -43,16 +44,24 @@
     async function submit(event) {
         event.preventDefault();
         console.log(project_name, project_location, project_description);
-        let response_string = await invoke("create_project", { projectName: project_name, scanLocation: project_location, description: project_description });
+        let projectData = { projectName: project_name, scanLocation: project_location, description: project_description };
+        let response_string = await invoke("create_project", projectData);
         let response = JSON.parse(response_string)
         console.log(response);
         if (response.result) {
+            emit('project-created', {
+                projectData: projectData,
+            })
             getCurrentWebview().window.close();
         }
         else {
             error = true;
             error_message = response.message;
         }
+    }
+
+    function closeWindow() {
+        getCurrentWebview().window.close();
     }
 </script>
 
@@ -79,5 +88,6 @@
     <div id="projectDescriptionHelp" class="form-text">A more detailed description about this project.</div>
 </div>
 <button type="submit" class="btn btn-primary" onclick={submit}>{submit_button_label}</button>
+<button type="submit" class="btn btn-secondary" onclick={closeWindow}>Close</button>
 </form>
 </div>

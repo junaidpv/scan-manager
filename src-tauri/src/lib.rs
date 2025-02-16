@@ -2,6 +2,7 @@ extern crate dirs;
 use std::fs;
 use std::path;
 use json;
+use std::io;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
@@ -12,23 +13,23 @@ fn greet(name: &str) -> String {
     )
 }
 
-fn get_project_home_directory() -> std::path::PathBuf {
+fn get_projects_directory() -> std::path::PathBuf {
     // path::Path(dirs::home_dir());
     // fs::create_dir();
     let home_dir = dirs::home_dir().unwrap();
-    let app_home = home_dir.join("idaf-scan-app");
-    fs::create_dir_all(app_home.clone()).ok();
+    let projects_dir = home_dir.join("idaf-scan-app").join("projects");
+    fs::create_dir_all(projects_dir.clone()).ok();
 
-    return app_home;
+    return projects_dir;
 }
 
 
 #[tauri::command]
 fn create_project(project_name: String, scan_location: String, description: String) -> String {
     let mut result = false;
-    let mut message = "";
-    let app_home: path::PathBuf = get_project_home_directory();
-    let project_dir = app_home.join("projects").join(project_name.to_lowercase());
+    let message;
+    let projects_dir: path::PathBuf = get_projects_directory();
+    let project_dir = projects_dir.join(project_name.to_lowercase());
     if project_dir.exists() {
         message = "Project already exists";
     }
@@ -52,6 +53,38 @@ fn create_project(project_name: String, scan_location: String, description: Stri
         result: result,
         message: message
     });
+}
+
+#[tauri::command]
+fn get_projects() -> io::Result<Vec<String>> {
+    let projects_dir = get_projects_directory();
+    // let mut vec = vec![];
+    // let mut dir_names = Vec::new();
+    // let mut dir_reader = fs::read_dir(projects_dir)?;
+    // for entry in dir_reader {
+    //     let entry = entry?;
+    //     let path = entry.path();
+    //     if path.is_dir() {
+    //         vec.push(entry.file_name().into_string().unwrap());
+    //         // visit_dirs(&path, cb)?;
+    //     }
+    // }
+    // return json::stringify(json::object!{
+    //     projects: vec
+    // });
+    let mut dir_names = Vec::new();
+    for entry in fs::read_dir(projects_dir)? {
+        let entry = entry?;
+        let path = entry.path();
+
+        if path.is_dir() {
+            if let Some(dir_name) = path.file_name().and_then(|name| name.to_str()) {
+                dir_names.push(dir_name.to_string());
+            }
+        }
+    }
+
+    Ok(dir_names)
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
