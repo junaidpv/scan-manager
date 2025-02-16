@@ -80,12 +80,14 @@
 
   let thumbnails = [
     {
-      src: convertFileSrc("/media/data/project-files/indic-archive/Test Project/lycion.JPG"),
+      src: "/media/data/project-files/indic-archive/Test Project/lycion.JPG",
       alt: "Capsules",
+      name: "Lycion"
     },
     {
-      src: convertFileSrc("/media/data/project-files/indic-archive/Test Project/Paint-Swatch-Wall.jpg"),
+      src: "/media/data/project-files/indic-archive/Test Project/Paint-Swatch-Wall.jpg",
       alt: "Capsules",
+      name: "Paint Swatch Wall"
     }
   ]
 
@@ -114,9 +116,9 @@
       <Sidebar items={sidebar_items} />
     {/snippet}
     {#snippet  content()}
-      <iframe src={page_url} title="Title"></iframe>
+      <!-- <iframe src={page_url} title="Title"></iframe> -->
       {#if active_image}
-        <img src={active_image} alt="Active" />
+        <img src={convertFileSrc(active_image)} alt="Active" />
       {/if}
     {/snippet}
     {#snippet second_sidebar()}
