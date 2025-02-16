@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Thumbnail from "./Thumbnail.svelte";
+    import SidebarItem from "./SidebarItem.svelte";
     interface ThumbnailItem {
 		title: string;
         description: string;
@@ -14,6 +14,6 @@
 </script>
 <div>
     {#each items as item}
-        <Thumbnail {...item}/>
+        <SidebarItem {...item}/>
     {/each}
 </div>
