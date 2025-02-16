@@ -4,8 +4,6 @@ use std::path;
 use json;
 use std::io;
 use std::path::Path;
-use serde_json::Value;
-use serde_json::json as serde_json;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
@@ -20,6 +18,7 @@ fn get_projects_directory() -> std::path::PathBuf {
     // path::Path(dirs::home_dir());
     // fs::create_dir();
     let home_dir = dirs::home_dir().unwrap();
+    // Prepare path to the projects directory.
     let projects_dir = home_dir.join("idaf-scan-app").join("projects");
     fs::create_dir_all(projects_dir.clone()).ok();
 
@@ -58,6 +57,7 @@ fn create_project(project_name: String, scan_location: String, description: Stri
     });
 }
 
+// Get list of directory names in the projects directory.
 fn list_directory_names<P: AsRef<Path>>(path: P) -> io::Result<Vec<String>> {
     let mut dir_names = Vec::new();
 
@@ -78,28 +78,11 @@ fn list_directory_names<P: AsRef<Path>>(path: P) -> io::Result<Vec<String>> {
 #[tauri::command]
 fn get_projects() -> String {
     let projects_dir = get_projects_directory();
-    // let mut vec = vec![];
-    // let mut dir_names = Vec::new();
-    // let mut dir_reader = fs::read_dir(projects_dir)?;
-    // for entry in dir_reader {
-    //     let entry = entry?;
-    //     let path = entry.path();
-    //     if path.is_dir() {
-    //         vec.push(entry.file_name().into_string().unwrap());
-    //         // visit_dirs(&path, cb)?;
-    //     }
-    // }
-    // return json::stringify(json::object!{
-    //     projects: vec
-    // });
     let result = true;
-    // let mut dir_names = Vec::new();
     let dir_names = match list_directory_names(projects_dir) {
         Ok(projects_dir) => projects_dir,
         Err(_e) => Vec::new()
     };
-    // let json_value: Value = serde_json!(dir_names); // Convert Vec<String> to JSON
-    // Ok(json_value.to_string()); // Serialize JSON to a string
 
     return json::stringify(json::object!{
         result: result,
