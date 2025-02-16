@@ -3,6 +3,8 @@
     import {onMount} from 'svelte'
 
     let projects = $state();
+    let success = $state(false);
+    let error_message = $state('Getting projects ...');
 
     // projects = invoke("get_projects");
     
@@ -13,18 +15,21 @@
             console.log(response);
             if (response.result) {
                 projects = response.names;
+                success = true;
             }
             else {
-                // error = true;
-                // error_message = response.message;
+                error_message = 'Something went wrong';
             }
         }catch(error) {
-            console.error(error)
+            error_message = 'Something went wrong';
         }
     })
 </script>
 <div class="container-fluid">
     {#each projects as project_name}
-        <p>{project_name}</p>
+        <button>{project_name}</button>
     {/each}
+    {#if !success}
+        <p>{error_message}</p>
+    {/if}
 </div>
