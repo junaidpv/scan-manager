@@ -115,7 +115,7 @@
     {/snippet}
     {#snippet project_info()}
       {#if project}
-        <ProjectInfo name={project.name} scan_location={project.scan_location} description={project.description} />
+        <ProjectInfo project={project} />
       {/if}
     {/snippet}
     {#snippet sidebar()}
