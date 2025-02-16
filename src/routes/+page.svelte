@@ -5,7 +5,8 @@
   import ProjectInfo from "$lib/ProjectInfo.svelte";
   import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
   import { emit, listen } from '@tauri-apps/api/event'
-    import SidebarItem from "$lib/SidebarItem.svelte";
+  import Thumbnails from "$lib/Thumbnails.svelte";
+  import { convertFileSrc } from '@tauri-apps/api/core';
 
   let name = $state("");
   let greetMsg = $state("");
@@ -122,6 +123,13 @@
     openProjectWindow();
   }
 
+  let thumbnails = [
+    {
+      src: convertFileSrc("/media/data/project-files/indic-archive/Test Project/lycion.JPG"),
+      alt: "Capsules",
+    }
+  ]
+
 </script>
 
 <main class="container-fluid">
@@ -148,6 +156,7 @@
     {/snippet}
     {#snippet  content()}
     <iframe src={page_url} title="Title"></iframe>
+    <Thumbnails thumbnails={thumbnails} />
     <h1>Welcome to Tauri + Svelte</h1>
     <img src="/bootstrap-icons/bootstrap.svg" alt="Bootstrap" width="32" height="32">
   
