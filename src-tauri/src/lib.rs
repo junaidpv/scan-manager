@@ -88,11 +88,10 @@ fn get_project_info(project_name: String) -> io::Result<json::JsonValue> {
 fn get_projects() -> String {
     let projects_dir = get_projects_directory();
     let mut result = true;
-    let mut dir_names: Vec<String> =  Vec::new();
     let mut project_infos: Vec<json::JsonValue> = Vec::new();
     let result_call = list_directory_names(projects_dir);
     if result_call.is_ok() {
-        dir_names  = result_call.unwrap();
+        let dir_names  = result_call.unwrap();
         for dir_name in dir_names.iter() {
             let project_info = get_project_info(dir_name.clone());
             if project_info.is_ok() {
