@@ -1,6 +1,6 @@
 <script lang="ts">
     import SidebarItem from "./SidebarItem.svelte";
-    interface ThumbnailItem {
+    interface SidebarItemInfo {
 		title: string;
         description: string;
         button_color: string;
@@ -8,7 +8,7 @@
 	}
 
     interface Props {
-        items: Array<ThumbnailItem>;
+        items: Array<SidebarItemInfo>;
     }
     let { items }: Props = $props();
 </script>
