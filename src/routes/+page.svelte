@@ -20,35 +20,6 @@
     document.body.style.pointerEvents = 'auto';
   }
 
-  function createProjectWindow() {
-    const webview = new WebviewWindow('create-project', {
-      url: '/create-project',
-    });
-
-    disableParentWindow();
-    
-    // since the webview window is created asynchronously,
-    // Tauri emits the `tauri://created` and `tauri://error` to notify you of the creation response
-    webview.once('tauri://created', function (e) {
-      console.log('success', e);
-      
-    })
-    webview.once('tauri://error', function (e) {
-      console.log(e);
-    })
-    webview.once('tauri://closed', function (e) {
-      enableParentWindow();
-    })
-    webview.once("tauri://close-requested", function (e) {
-      enableParentWindow();
-    })
-  }
-
-  // @ts-ignore
-  async function onCreateProjectMenuClick(event) {
-    createProjectWindow();
-  }
-
   let first: SidebarItemInfo = {
     title: 'Scan',
     description: 'Scan the project folder for scans',
@@ -77,32 +48,57 @@
     project = (event.payload as { projectData: ProjectItem }).projectData;
   });
 
-  function openProjectWindow() {
-    const webview = new WebviewWindow('open-project', {
-      url: '/open-project',
-    });
+  function openWindow(child_window: ChildWindow, disable_parent: Function) {
+    const webview = new WebviewWindow(child_window.name, {url: child_window.url, title: child_window.title});
 
-    disableParentWindow();
+    disable_parent();
     
     // since the webview window is created asynchronously,
     // Tauri emits the `tauri://created` and `tauri://error` to notify you of the creation response
     webview.once('tauri://created', function (e) {
-      console.log('success', e);
+      if (child_window.created_callback) {
+        child_window.created_callback(e);
+      }
     })
     webview.once('tauri://error', function (e) {
-      console.log(e);
+      if (child_window.error_callback) {
+        child_window.error_callback(e);
+      }
     })
     webview.once('tauri://closed', function (e) {
-      enableParentWindow();
+      if (child_window.close_callback) {
+        child_window.close_callback(e);
+      }
     })
     webview.once("tauri://close-requested", function (e) {
-      enableParentWindow();
+      if (child_window.close_callback) {
+        child_window.close_callback(e);
+      }
     })
+  }
+
+  let create_project_window: ChildWindow = {
+    name: 'create-project',
+    title: 'Create Project',
+    url: '/create-project',
+    close_callback: enableParentWindow
+  };
+
+  let open_project_window: ChildWindow = {
+    name: 'open-project',
+    title: 'Open Project',
+    url: '/open-project',
+    close_callback: enableParentWindow
+  };
+
+  // @ts-ignore
+  async function onCreateProjectMenuClick(event) {
+    openWindow(create_project_window, disableParentWindow);
   }
 
   // @ts-ignore
   async function onOpenProjectMenuClick(event) {
-    openProjectWindow();
+    openWindow(open_project_window, disableParentWindow);
   }
 
   let thumbnails = [

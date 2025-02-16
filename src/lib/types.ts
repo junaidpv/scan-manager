@@ -40,3 +40,12 @@ interface SidebarItemInfo {
     icon: string | null;
     onclick: Function | null | undefined
 }
+
+interface ChildWindow {
+    name: string;
+    title: string;
+    url: string;
+    created_callback?: Function;
+    close_callback?: Function;
+    error_callback?: Function;
+}
