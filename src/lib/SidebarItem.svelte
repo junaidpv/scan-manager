@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
     import Button from "./Button.svelte";
-    let {title = 'Unkown', description = '', icon, button_color} = $props();
+    let info: SidebarItemInfo = $props();
 </script>
 <div class="card">
-    <Button title={title} description={description} icon={icon} button_color={button_color}/>
+    <Button title={info.title} description={info.description} icon={info.icon} button_color={info.button_color}/>
 </div>

@@ -32,3 +32,10 @@ interface ProjectItem {
      */
     updated_at: number;
 }
+
+interface SidebarItemInfo {
+    title: string;
+    description: string;
+    button_color: string;
+    icon: string | null;
+}
