@@ -8,9 +8,6 @@
   import Thumbnails from "$lib/Thumbnails.svelte";
   import { convertFileSrc } from '@tauri-apps/api/core';
 
-  let name = $state("");
-  let page = $state("main");
-
   let project: ProjectItem | null = $state(null);
   
   let page_url = $state('/main');
