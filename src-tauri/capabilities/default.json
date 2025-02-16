@@ -13,6 +13,7 @@
     "core:webview:allow-create-webview-window",
     "dialog:default",
     "dialog:allow-open",
-    "core:window:allow-close"
+    "core:window:allow-close",
+    "core:window:allow-destroy"
   ]
 }
