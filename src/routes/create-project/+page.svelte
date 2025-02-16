@@ -34,7 +34,7 @@
     
     // @ts-ignore
     async function submit(event) {
-        event.preventDefault();
+        // event.preventDefault();
         console.log(project_name, project_location, project_description);
         let now_timestamp = new Date().getTime();
             let project: ProjectItem & Record<string, unknown> = {
@@ -51,7 +51,9 @@
             emit('project-selected', {
                 projectData: project,
             })
-            getCurrentWebview().window.close();
+            .then(() => {
+                getCurrentWebview().window.close();
+            });
         }
         else {
             error = true;
@@ -60,7 +62,7 @@
     }
 
     function closeWindow() {
-        getCurrentWebview().window.close();
+        getCurrentWebview().window.destroy();
     }
 </script>
 

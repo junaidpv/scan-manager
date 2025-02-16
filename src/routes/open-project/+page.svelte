@@ -13,7 +13,7 @@
         try {
             let response_string: string = await invoke("get_projects");
             let response = JSON.parse(response_string)
-            console.log(response);
+            // console.log(response);
             if (response.result) {
                 projects = response.projects;
                 success = true;
@@ -26,11 +26,13 @@
         }
     })
     function select_project(event: Event, project: ProjectItem) {
-        event.preventDefault();
+        // event.preventDefault();
+        console.log('selected project');
         emit('project-selected', {
             projectData: project,
-        })
-        getCurrentWebview().window.close();
+        }).then(() => {
+            getCurrentWebview().window.destroy();
+        });
     }
 </script>
 <div class="container-fluid">

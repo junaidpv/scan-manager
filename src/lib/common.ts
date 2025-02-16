@@ -27,4 +27,9 @@ export function openWindow(child_window: ChildWindow, disable_parent: Function) 
         child_window.close_callback(e);
       }
     })
+    webview.once("tauri://destroyed", function (e) {
+        if (child_window.close_callback) {
+          child_window.close_callback(e);
+        }
+      })
   }
