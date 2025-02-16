@@ -25,10 +25,10 @@ interface ProjectItem {
     /**
      * The timestamp when the project item was created.
      */
-    created_at: Number;
+    created_at: number;
 
     /**
      * The timestamp when the project item was last updated.
      */
-    updated_at: Number;
+    updated_at: number;
 }
