@@ -107,9 +107,9 @@
             Menu
         </button>
         <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#" onclick={onCreateProjectMenuClick}>Create Project ...</a></li>
-            <li><a class="dropdown-item" href="#" onclick="{onOpenProjectMenuClick}">Open Project ...</a></li>
-            <li><a class="dropdown-item" href="#">Exit</a></li>
+            <li><button class="dropdown-item" onclick={onCreateProjectMenuClick}>Create Project ...</button></li>
+            <li><button class="dropdown-item" onclick="{onOpenProjectMenuClick}">Open Project ...</button></li>
+            <li><button class="dropdown-item" >Exit</button></li>
         </ul>
       </div>
     {/snippet}
