@@ -1,5 +1,7 @@
 <script lang="ts">
     import { invoke } from "@tauri-apps/api/core";
+    import { emit } from "@tauri-apps/api/event";
+    import { getCurrentWebview } from "@tauri-apps/api/webview";
     import { onMount } from 'svelte'
 
     let projects: ProjectItem[] = $state([]);
@@ -23,6 +25,13 @@
             error_message = 'Something went wrong';
         }
     })
+    function select_project(event: Event, project: ProjectItem) {
+        event.preventDefault();
+        emit('project-selected', {
+            projectData: project,
+        })
+        getCurrentWebview().window.close();
+    }
 </script>
 <div class="container-fluid">
     {#if projects.length != 0}
@@ -36,7 +45,7 @@
                             <dt>Location</dt><dd>{project.scan_location}</dd>
                             <dt>Description</dt><dd>{project.description}</dd>
                         </dl>
-                        <button type="button" class="btn btn-primary">Open</button>
+                        <button type="button" class="btn btn-primary" onclick={(event) => select_project(event, project)} >Open</button>
                     </div>
                 </div>
             </div>

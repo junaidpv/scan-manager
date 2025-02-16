@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { invoke } from "@tauri-apps/api/core";
     import { getCurrentWebview } from "@tauri-apps/api/webview";
     import { open } from '@tauri-apps/plugin-dialog';
@@ -45,12 +45,18 @@
         event.preventDefault();
         console.log(project_name, project_location, project_description);
         let projectData = { projectName: project_name, scanLocation: project_location, description: project_description };
-        let response_string = await invoke("create_project", projectData);
-        let response = JSON.parse(response_string)
+        let response_string = await invoke("create_project", projectData) as string;
+        let response = JSON.parse(response_string);
         console.log(response);
         if (response.result) {
-            emit('project-created', {
-                projectData: projectData,
+            let project: ProjectItem = {
+                name: project_name,
+                scan_location: project_location,
+                description: project_description,
+            }
+
+            emit('project-selected', {
+                projectData: project,
             })
             getCurrentWebview().window.close();
         }

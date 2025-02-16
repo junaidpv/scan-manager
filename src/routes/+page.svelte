@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { invoke } from "@tauri-apps/api/core";
   import Sidebar from "../lib/Sidebar.svelte";
   import LayoutDefault from "$lib/LayoutDefault.svelte";
@@ -10,7 +10,7 @@
   let greetMsg = $state("");
   let page = $state("main");
 
-  let project = $state();
+  let project: ProjectItem | null = $state(null);
   
   let page_url = $state('/main');
 
@@ -68,10 +68,10 @@
 
   // listen to the `click` event and get a function to remove the event listener
   // there's also a `once` function that subscribes to an event and automatically unsubscribes the listener on the first event
-  const unlisten = listen('project-created', (event) => {
+  const unlisten = listen('project-selected', (event) => {
     // event.event is the event name (useful if you want to use a single callback fn for multiple event types)
     // event.payload is the payload object
-    project = event.payload.projectData;
+    project = (event.payload as { projectData: ProjectItem }).projectData;
   });
 
   function openProjectWindow() {
@@ -115,7 +115,7 @@
     {/snippet}
     {#snippet project_info()}
       {#if project}
-        <ProjectInfo name={project.projectName} scan_location={project.scanLocation} description={project.description} />
+        <ProjectInfo name={project.name} scan_location={project.scan_location} description={project.description} />
       {/if}
     {/snippet}
     {#snippet sidebar()}
