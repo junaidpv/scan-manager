@@ -5,6 +5,7 @@
   import ProjectInfo from "$lib/ProjectInfo.svelte";
   import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
   import { emit, listen } from '@tauri-apps/api/event'
+    import SidebarItem from "$lib/SidebarItem.svelte";
 
   let name = $state("");
   let greetMsg = $state("");
@@ -51,20 +52,25 @@
       page_url = '/main';
     }
   }
-  let sidebar_items = [
-    {
-      title: 'Scan',
-      description: 'Scan the project folder for scans',
-      button_color: 'primary',
-      icon: 'search',
-    },
-    {
-      title: 'Two',
-      description: 'A two description',
-      icon: 'fire',
-      button_color: 'danger',
+  let first: SidebarItemInfo = {
+    title: 'Scan',
+    description: 'Scan the project folder for scans',
+    button_color: 'primary',
+    icon: 'search',
+    onclick: () => {
+      page_url = '/misc?name=Junaid';
     }
-  ];
+  };
+  let second: SidebarItemInfo = {
+    title: 'Two',
+    description: 'A two description',
+    icon: 'fire',
+    button_color: 'danger',
+    onclick: () => {
+      page_url = '/misc?name=Wonderful';
+    }
+  }
+  let sidebar_items = [ first, second];
 
   // listen to the `click` event and get a function to remove the event listener
   // there's also a `once` function that subscribes to an event and automatically unsubscribes the listener on the first event

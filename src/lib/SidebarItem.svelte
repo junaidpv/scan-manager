@@ -3,5 +3,5 @@
     let info: SidebarItemInfo = $props();
 </script>
 <div class="card">
-    <Button title={info.title} description={info.description} icon={info.icon} button_color={info.button_color}/>
+    <Button title={info.title} description={info.description} icon={info.icon} button_color={info.button_color} onclick={info.onclick}/>
 </div>

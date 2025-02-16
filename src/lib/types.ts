@@ -38,4 +38,5 @@ interface SidebarItemInfo {
     description: string;
     button_color: string;
     icon: string | null;
+    onclick: Function | null | undefined
 }
