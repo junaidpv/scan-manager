@@ -15,21 +15,35 @@
   
   let page_url = $state('/main');
 
+  function disableParentWindow() {
+    document.body.style.pointerEvents = 'none';
+  }
+
+  function enableParentWindow() {
+    document.body.style.pointerEvents = 'auto';
+  }
+
   function createProjectWindow() {
     const webview = new WebviewWindow('create-project', {
       url: '/create-project',
     });
+
+    disableParentWindow();
     
     // since the webview window is created asynchronously,
     // Tauri emits the `tauri://created` and `tauri://error` to notify you of the creation response
     webview.once('tauri://created', function (e) {
       console.log('success', e);
+      
     })
     webview.once('tauri://error', function (e) {
       console.log(e);
     })
     webview.once('tauri://closed', function (e) {
-      console.log(e);
+      enableParentWindow();
+    })
+    webview.once("tauri://close-requested", function (e) {
+      enableParentWindow();
     })
   }
 
@@ -84,6 +98,8 @@
     const webview = new WebviewWindow('open-project', {
       url: '/open-project',
     });
+
+    disableParentWindow();
     
     // since the webview window is created asynchronously,
     // Tauri emits the `tauri://created` and `tauri://error` to notify you of the creation response
@@ -94,7 +110,10 @@
       console.log(e);
     })
     webview.once('tauri://closed', function (e) {
-      console.log(e);
+      enableParentWindow();
+    })
+    webview.once("tauri://close-requested", function (e) {
+      enableParentWindow();
     })
   }
 
