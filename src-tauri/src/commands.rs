@@ -25,25 +25,27 @@ fn get_projects_directory() -> std::path::PathBuf {
 }
 
 
-#[tauri::command]
-pub fn create_project(project_name: String, scan_location: String, description: String) -> String {
+#[tauri::command(rename_all = "snake_case")]
+pub fn create_project(name: String, scan_location: String, description: String, created_at: f64, updated_at: f64) -> String {
     let mut result = false;
     let message;
     let projects_dir: path::PathBuf = get_projects_directory();
-    let project_dir = projects_dir.join(project_name.to_lowercase());
+    let project_dir = projects_dir.join(name.to_lowercase());
     if project_dir.exists() {
         message = "Project already exists";
     }
     else {
         fs::create_dir_all(project_dir.clone()).ok();
         let project_info = json::object!{
-            name: project_name,
+            name: name,
             scan_location: scan_location,
-            description: description
+            description: description,
+            created_at: created_at,
+            updated_at: updated_at,
         };
-    
+
         let project_info_file = project_dir.join("project.json");
-    
+
         fs::write(project_info_file.into_os_string().into_string().unwrap(), json::stringify(project_info)).expect("Unable to write file");
         result = true;
         message = "Project created";

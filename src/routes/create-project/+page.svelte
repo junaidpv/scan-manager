@@ -36,17 +36,18 @@
     async function submit(event) {
         event.preventDefault();
         console.log(project_name, project_location, project_description);
-        let projectData = { projectName: project_name, scanLocation: project_location, description: project_description };
-        let response_string = await invoke("create_project", projectData) as string;
-        let response = JSON.parse(response_string);
-        console.log(response);
-        if (response.result) {
-            let project: ProjectItem = {
+        let now_timestamp = new Date().getTime();
+            let project: ProjectItem & Record<string, unknown> = {
                 name: project_name,
                 scan_location: project_location,
                 description: project_description,
+                created_at: now_timestamp,
+                updated_at: now_timestamp,
             }
-
+        let response_string = await invoke("create_project", project) as string;
+        let response = JSON.parse(response_string);
+        console.log(response);
+        if (response.result) {
             emit('project-selected', {
                 projectData: project,
             })
