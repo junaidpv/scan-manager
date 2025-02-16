@@ -12,6 +12,8 @@
   
   let page_url = $state('/main');
 
+  let active_image: string | null = $state(null);
+
   function disableParentWindow() {
     document.body.style.pointerEvents = 'none';
   }
@@ -48,6 +50,10 @@
     project = (event.payload as { projectData: ProjectItem }).projectData;
   });
 
+  const listen_image_selected = listen('image-selected', (event) => {
+    active_image = (event.payload as { src: string }).src;
+  });
+
   let create_project_window: ChildWindow = {
     name: 'create-project',
     title: 'Create Project',
@@ -75,6 +81,10 @@
   let thumbnails = [
     {
       src: convertFileSrc("/media/data/project-files/indic-archive/Test Project/lycion.JPG"),
+      alt: "Capsules",
+    },
+    {
+      src: convertFileSrc("/media/data/project-files/indic-archive/Test Project/Paint-Swatch-Wall.jpg"),
       alt: "Capsules",
     }
   ]
@@ -105,6 +115,9 @@
     {/snippet}
     {#snippet  content()}
       <iframe src={page_url} title="Title"></iframe>
+      {#if active_image}
+        <img src={active_image} alt="Active" />
+      {/if}
     {/snippet}
     {#snippet second_sidebar()}
       <Thumbnails thumbnails={thumbnails} />
