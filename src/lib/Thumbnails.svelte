@@ -4,7 +4,11 @@
     let {thumbnails} = $props();
 </script>
 <div>
-    {#each thumbnails as thumbnail}
-        <Thumbnail {...thumbnail} />
-    {/each}
+    {#if thumbnails.length == 0}
+        <p>No thumbnails</p>
+    {:else}
+        {#each thumbnails as thumbnail}
+            <Thumbnail {...thumbnail} />
+        {/each}
+    {/if}
 </div>

@@ -1,6 +1,7 @@
 interface ThumbnailItem {
-    title: string;
-    description: string;
+    src: string;
+    alt?: string;
+    title?: string;
 }
 
 /**

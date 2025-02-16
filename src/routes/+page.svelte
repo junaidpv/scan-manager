@@ -13,6 +13,7 @@
   let page_url = $state('/main');
 
   let active_image: string | null = $state(null);
+  let thumbnails: ThumbnailItem[] = $state([]);
 
   function disableParentWindow() {
     document.body.style.pointerEvents = 'none';
@@ -42,12 +43,31 @@
   }
   let sidebar_items = [ first, second];
 
+  async function get_project_images(project: ProjectItem) {
+    let response_string = await invoke("get_project_images", {projectName: project.name}) as string;
+    let response = JSON.parse(response_string);
+    console.log(response);
+    if (response.result) {
+      thumbnails = [];
+        // thumbnails = response.images;
+        response.images.forEach((image: string) => {
+            thumbnails.push({
+                src: image
+            });
+        });
+    }
+    else {
+        thumbnails = [];
+    }
+  }
+
   // listen to the `click` event and get a function to remove the event listener
   // there's also a `once` function that subscribes to an event and automatically unsubscribes the listener on the first event
   const unlisten = listen('project-selected', (event) => {
     // event.event is the event name (useful if you want to use a single callback fn for multiple event types)
     // event.payload is the payload object
     project = (event.payload as { projectData: ProjectItem }).projectData;
+    get_project_images(project);
   });
 
   const listen_image_selected = listen('image-selected', (event) => {
@@ -77,19 +97,6 @@
   async function onOpenProjectMenuClick(event) {
     openWindow(open_project_window, disableParentWindow);
   }
-
-  let thumbnails = [
-    {
-      src: "/media/data/project-files/indic-archive/Test Project/lycion.JPG",
-      alt: "Capsules",
-      name: "Lycion"
-    },
-    {
-      src: "/media/data/project-files/indic-archive/Test Project/Paint-Swatch-Wall.jpg",
-      alt: "Capsules",
-      name: "Paint Swatch Wall"
-    }
-  ]
 
 </script>
 

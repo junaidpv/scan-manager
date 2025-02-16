@@ -1,6 +1,7 @@
 use std::fs;
 use std::path;
 use json;
+use regex::Regex;
 use std::io;
 use std::path::Path;
 
@@ -69,9 +70,26 @@ fn list_directory_names<P: AsRef<Path>>(path: P) -> io::Result<Vec<String>> {
     Ok(dir_names)
 }
 
+fn list_files<P: AsRef<Path>>(path: P) -> io::Result<Vec<String>> {
+    let mut file_names = Vec::new();
+
+    for entry in fs::read_dir(path)? {
+        let entry = entry?;
+        let path = entry.path();
+
+        if path.is_file() {
+            if let Some(file_name) = path.file_name().and_then(|name| name.to_str()) {
+                file_names.push(file_name.to_string());
+            }
+        }
+    }
+
+    Ok(file_names)
+}
+
 fn get_project_info(project_name: String) -> io::Result<json::JsonValue> {
     let projects_dir = get_projects_directory();
-    let project_dir = projects_dir.join(project_name);
+    let project_dir = projects_dir.join(project_name.to_lowercase());
     let project_info_file = project_dir.join("project.json");
     let project_info = fs::read_to_string(project_info_file)?;
 
@@ -100,5 +118,33 @@ pub fn get_projects() -> String {
     return json::stringify(json::object!{
         result: result,
         projects: project_infos
+    });
+}
+
+#[tauri::command]
+pub fn get_project_images(project_name: String) -> String {
+    let project_info = get_project_info(project_name.clone());
+    let scan_location = path::PathBuf::from( project_info.unwrap()["scan_location"].to_string());
+
+    let mut result = true;
+    let mut image_infos: Vec<String> = Vec::new();
+    let result_call = list_files(scan_location.clone());
+    let re = Regex::new(r"^(?i)(.*\.(jpg|jpeg|png|gif|tif))$").unwrap();
+    if result_call.is_ok() {
+        let file_names  = result_call.unwrap();
+        for file_name in file_names.iter() {
+            if re.is_match(&file_name) {
+                let image_full_path = scan_location.join(file_name);
+                image_infos.push(image_full_path.into_os_string().into_string().unwrap());
+            }
+        }
+    }
+    else {
+        result = false;
+    }
+
+    return json::stringify(json::object!{
+        result: result,
+        images: image_infos
     });
 }
