@@ -5,13 +5,6 @@ use std::io;
 use std::path::Path;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-#[tauri::command]
-pub fn greet(name: &str) -> String {
-    format!(
-        "Hello, {}! You've been greeted from Rust! modified by Junaid again.",
-        name
-    )
-}
 
 fn get_projects_directory() -> std::path::PathBuf {
     // path::Path(dirs::home_dir());
