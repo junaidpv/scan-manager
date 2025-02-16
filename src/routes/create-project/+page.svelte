@@ -20,14 +20,6 @@
             return 'Select Folder';
         }
     });
-    let submit_button_label = $derived.by(() => {
-        if (project_location) {
-            return 'Update';
-        }
-        else {
-            return 'Create';
-        }
-    });
 
     // Open a dialog
     async function openProjectLocation() {
@@ -93,7 +85,7 @@
     <textarea id="projectDescription" name="project_description" class="form-control" aria-describedby="projectDescriptionHelp" bind:value={project_description}></textarea>
     <div id="projectDescriptionHelp" class="form-text">A more detailed description about this project.</div>
 </div>
-<button type="submit" class="btn btn-primary" onclick={submit}>{submit_button_label}</button>
+<button type="submit" class="btn btn-primary" onclick={submit}>Create</button>
 <button type="submit" class="btn btn-secondary" onclick={closeWindow}>Close</button>
 </form>
 </div>
