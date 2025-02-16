@@ -2,7 +2,7 @@
     let {sidebar, content, menu, project_info} = $props();
 </script>
 <div class="row">
-    <header>
+    <header class="col-12">
         {@render menu()}
         {@render project_info()}
     </header>

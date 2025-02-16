@@ -42,7 +42,7 @@
   async function greet(event) {
     event.preventDefault();
     // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    greetMsg = await invoke("get_project_home_directory", { name });
+    greetMsg = await invoke("greet", { name });
     if (page == 'main') {
       page = 'misc';
       page_url = '/misc?name=Wonderful';
