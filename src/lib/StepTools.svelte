@@ -23,16 +23,16 @@
     <div class="text-center row gy-1">
         {#if step == 'fix_orientation'}
             <div class="col-12">
-                <button type="button" class="btn btn-primary" aria-label="Roate Counter Clockwise" onclick={() => {rotateAngle(-45)}}>
+                <button type="button" class="btn btn-primary" aria-label="Roate Counter Clockwise" onclick={() => {rotateAngle(-90)}}>
                     <i class="bi bi-arrow-counterclockwise"></i>
                 </button>
                 <strong>{step_settings.rotate_angle}°</strong>
-                <button type="button" class="btn btn-primary" aria-label="Roate Clockwise" onclick={() => {rotateAngle(45)}}>
+                <button type="button" class="btn btn-primary" aria-label="Roate Clockwise" onclick={() => {rotateAngle(90)}}>
                     <i class="bi bi-arrow-clockwise"></i>
                 </button>
             </div>
             <div class="col-12">
-                <button type="button" class="btn btn-secondary" aria-label="Reset">Reset</button>
+                <button type="button" class="btn btn-secondary" aria-label="Reset" onclick={(event) => {step_settings.rotate_angle = 0;}}>Reset</button>
             </div>
         {/if}
         {#if step == 'deskew'}
