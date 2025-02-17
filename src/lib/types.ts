@@ -50,3 +50,12 @@ interface ChildWindow {
     close_callback?: Function;
     error_callback?: Function;
 }
+
+
+interface StepSettings {
+    deskew_mode: string;
+    deskew_value: number;
+    frame_ratio_width: number;
+    frame_ratio_height: number;
+    rotate_angle: number;
+}

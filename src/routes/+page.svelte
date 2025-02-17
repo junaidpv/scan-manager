@@ -17,6 +17,13 @@
   let active_image: string | null = $state(null);
   let thumbnails: ThumbnailItem[] = $state([]);
   let active_step = $state('fix_orientation');
+  let active_step_settings = $state({
+    deskew_mode: 'manual',
+    deskew_value: 0,
+    frame_ratio_width: 1,
+    frame_ratio_height: 1,
+    rotate_angle: 0,
+  });
 
   function disableParentWindow() {
     document.body.style.pointerEvents = 'none';
@@ -25,26 +32,6 @@
   function enableParentWindow() {
     document.body.style.pointerEvents = 'auto';
   }
-
-  let first: SidebarItemInfo = {
-    title: 'Scan',
-    description: 'Scan the project folder for scans',
-    button_color: 'primary',
-    icon: 'search',
-    onclick: () => {
-      page_url = '/misc?name=Junaid';
-    }
-  };
-  let second: SidebarItemInfo = {
-    title: 'Two',
-    description: 'A two description',
-    icon: 'fire',
-    button_color: 'danger',
-    onclick: () => {
-      page_url = '/misc?name=Wonderful';
-    }
-  }
-  let sidebar_items = [ first, second];
 
   async function get_project_images(project: ProjectItem) {
     let response_string = await invoke("get_project_images", {projectName: project.name}) as string;
@@ -127,9 +114,8 @@
       {/if}
     {/snippet}
     {#snippet first_sidebar()}
-      <Sidebar items={sidebar_items} />
       <Steps />
-      <StepTools step={active_step}/>
+      <StepTools step={active_step} step_settings={active_step_settings}/>
     {/snippet}
     {#snippet  content()}
       <!-- <iframe src={page_url} title="Title"></iframe> -->
