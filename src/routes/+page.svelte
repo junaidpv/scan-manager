@@ -1,6 +1,5 @@
 <script lang="ts">
   import { invoke } from "@tauri-apps/api/core";
-  import Sidebar from "../lib/Sidebar.svelte";
   import LayoutDefault from "$lib/LayoutDefault.svelte";
   import ProjectInfo from "$lib/ProjectInfo.svelte";
   import { emit, listen } from '@tauri-apps/api/event'
@@ -23,6 +22,12 @@
     frame_ratio_width: 1,
     frame_ratio_height: 1,
     rotate_angle: 0,
+    frame_settings: {
+      start_x: 0,
+      start_y: 0,
+      end_x: null,
+      end_y: null,
+    }
   });
 
   function disableParentWindow() {
@@ -99,11 +104,11 @@
     {#snippet menu()}
       <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Menu
+            Project
         </button>
         <ul class="dropdown-menu">
-            <li><button class="dropdown-item" onclick={onCreateProjectMenuClick}>Create Project ...</button></li>
-            <li><button class="dropdown-item" onclick="{onOpenProjectMenuClick}">Open Project ...</button></li>
+            <li><button class="dropdown-item" onclick={onCreateProjectMenuClick}>Create ...</button></li>
+            <li><button class="dropdown-item" onclick="{onOpenProjectMenuClick}">Open ...</button></li>
             <li><button class="dropdown-item" >Exit</button></li>
         </ul>
       </div>

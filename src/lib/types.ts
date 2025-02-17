@@ -58,4 +58,12 @@ interface StepSettings {
     frame_ratio_width: number;
     frame_ratio_height: number;
     rotate_angle: number;
+    frame_settings: FrameSettings;
+}
+
+interface FrameSettings {
+    start_x: number;
+    start_y: number;
+    end_x: number | null;
+    end_y: number | null;
 }
