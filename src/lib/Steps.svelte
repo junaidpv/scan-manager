@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { emit } from "@tauri-apps/api/event";
+
 
     let active_step = $state('fix_orientation');
     let steps = [
@@ -29,6 +31,7 @@
     ];
     function select_step(step_name: string) {
         active_step = step_name;
+        emit('step_selected', {step: step_name});
     }
 </script>
 <div class="d-grid mx-auto">

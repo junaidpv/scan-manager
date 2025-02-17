@@ -8,6 +8,7 @@
   import { convertFileSrc } from '@tauri-apps/api/core';
   import { openWindow } from "$lib/common";
     import Steps from "$lib/Steps.svelte";
+    import StepTools from "$lib/StepTools.svelte";
 
   let project: ProjectItem | null = $state(null);
   
@@ -15,6 +16,7 @@
 
   let active_image: string | null = $state(null);
   let thumbnails: ThumbnailItem[] = $state([]);
+  let active_step = $state('fix_orientation');
 
   function disableParentWindow() {
     document.body.style.pointerEvents = 'none';
@@ -75,6 +77,10 @@
     active_image = (event.payload as { src: string }).src;
   });
 
+  listen('step_selected', (event) => {
+    active_step = (event.payload as { step: string }).step;
+  });
+
   let create_project_window: ChildWindow = {
     name: 'create-project',
     title: 'Create Project',
@@ -123,6 +129,7 @@
     {#snippet first_sidebar()}
       <Sidebar items={sidebar_items} />
       <Steps />
+      <StepTools step={active_step}/>
     {/snippet}
     {#snippet  content()}
       <!-- <iframe src={page_url} title="Title"></iframe> -->
