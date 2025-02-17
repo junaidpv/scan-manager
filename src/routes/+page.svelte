@@ -7,6 +7,7 @@
   import Thumbnails from "$lib/Thumbnails.svelte";
   import { convertFileSrc } from '@tauri-apps/api/core';
   import { openWindow } from "$lib/common";
+    import Steps from "$lib/Steps.svelte";
 
   let project: ProjectItem | null = $state(null);
   
@@ -121,6 +122,7 @@
     {/snippet}
     {#snippet first_sidebar()}
       <Sidebar items={sidebar_items} />
+      <Steps />
     {/snippet}
     {#snippet  content()}
       <!-- <iframe src={page_url} title="Title"></iframe> -->
