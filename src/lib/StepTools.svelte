@@ -32,7 +32,7 @@
                 </button>
             </div>
             <div class="col-12">
-                <button type="button" class="btn btn-secondary" aria-label="Reset" onclick={(event) => {step_settings.rotate_angle = 0;}}>Reset</button>
+                <button type="button" class="btn btn-secondary" aria-label="Reset" onclick={() => {step_settings.rotate_angle = 0;}}>Reset</button>
             </div>
         {/if}
         {#if step == 'deskew'}
