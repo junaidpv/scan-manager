@@ -14,18 +14,6 @@ pub struct ProjectInfo {
     pub updated_at: Option<f64>,
 }
 
-// impl ProjectInfo {
-//     pub fn new(name: String, scan_location: String, description: String) -> Self {
-//         ProjectInfo {
-//             name: name,
-//             scan_location: scan_location,
-//             description: description,
-//             created_at: None,
-//             updated_at: None
-//         }
-//     }
-// }
-
 pub fn get_projects_directory() -> std::path::PathBuf {
     // path::Path(dirs::home_dir());
     // fs::create_dir();
@@ -67,14 +55,14 @@ pub fn list_files<P: AsRef<Path>>(path: P) -> io::Result<Vec<String>> {
             }
         }
     }
-
+    file_names.sort();
     Ok(file_names)
 }
 
 
 /**
  * Get information about the project.
- * 
+ *
  * @param project_name The name of the project.
  */
 pub fn get_project_info(project_name: String) -> io::Result<json::JsonValue> {
@@ -89,14 +77,14 @@ pub fn get_project_info(project_name: String) -> io::Result<json::JsonValue> {
 /**
  * Creates a new ProjectImages struct from a given result and images.
  * This will be used to return the images from the project.
- * 
+ *
  */
 #[derive(Serialize)]
 pub struct ProjectImages {
     /**
      * The result of the operation.
      * This will be true if the operation was successful and false if it was not.
-     *  
+     *
      */
     result: bool,
     /**
@@ -111,7 +99,7 @@ pub struct ProjectImages {
  * @param result The result of the operation.
  * @param images The images to be included in the struct.
  * @return A new ProjectImages struct.
- * 
+ *
  */
 impl ProjectImages {
     pub fn new(result: bool, images: Vec<ImageInfo>) -> Self {
