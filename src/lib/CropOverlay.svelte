@@ -1,8 +1,14 @@
 <script lang="ts">
-    let start_x = 5;
-    let start_y = 5;
-    let width = 105;
-    let height = 105;
+    interface CropOverlayProps {
+        image_width: number;
+        image_height: number;
+    }
+    let crop_overlay_props: CropOverlayProps = $props();
+
+    let start_x = 500;
+    let start_y = 500;
+    let width = 500;
+    let height = 500;
 </script>
 <svg class="crop-overlay" style="background-color: transparent;">
     <mask id="mask">

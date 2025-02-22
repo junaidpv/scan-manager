@@ -128,10 +128,10 @@
     {#snippet  content()}
       <!-- <iframe src={page_url} title="Title"></iframe> -->
       {#if active_image}
-        <div style="height: 100%; display: flex; justify-content: center; align-items: center; position: relative;">
-          <div class="image-wrapper" style="max-height: 100%; transform: rotate({active_step_settings.rotate_angle}deg) skew({active_step_settings.deskew_value}deg); position: relative;">
-            <img style="width: 100%;" src={convertFileSrc(active_image.path)} alt="Active" />
-            <CropOverlay />
+        <div style="height: 100%; justify-content: center; align-items: center; position: relative;">
+          <div class="image-wrapper" style="width: {active_image.width}px; height: {active_image.height}px; transform: rotate({active_step_settings.rotate_angle}deg) skew({active_step_settings.deskew_value}deg); position: relative;">
+            <img width={active_image.width} height={active_image.height} src={convertFileSrc(active_image.path)} alt="Active" />
+            <CropOverlay image_width={active_image.width} image_height={active_image.height} />
           </div>
           <GridOverlay grid_size={grid_size}  />
         </div>
