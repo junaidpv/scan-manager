@@ -1,7 +1,7 @@
 <script lang="ts">
     import { invoke } from "@tauri-apps/api/core";
     import { getCurrentWebview } from "@tauri-apps/api/webview";
-    import { open } from '@tauri-apps/plugin-dialog';
+    import { open as dialogOpen } from '@tauri-apps/plugin-dialog';
     import { emit, listen } from '@tauri-apps/api/event'
     // when using `"withGlobalTauri": true`, you may use
     // const { open } = window.__TAURI__.dialog;
@@ -23,7 +23,7 @@
 
     // Open a dialog
     async function openProjectLocation() {
-        const file = await open({
+        const file = await dialogOpen({
         multiple: false,
         directory: true,
         });
