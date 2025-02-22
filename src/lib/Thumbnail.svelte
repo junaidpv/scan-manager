@@ -14,7 +14,7 @@
 <div>
     <button onclick={select_image}>
     <figure>
-        <img src={convertFileSrc(image_info.path)} class="img-thumbnail" alt='' />
+        <img src={convertFileSrc(image_info.path)} class="img-thumbnail" alt='' loading="lazy" />
         <figcaption>Test</figcaption>
     </figure>
     </button>
