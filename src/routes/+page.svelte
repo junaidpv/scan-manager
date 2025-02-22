@@ -125,7 +125,9 @@
     {#snippet  content()}
       <!-- <iframe src={page_url} title="Title"></iframe> -->
       {#if active_image}
-        <img src={convertFileSrc(active_image)} alt="Active" />
+        <div style="height: 100%;">
+          <img style="max-height: 100%; object-fit: cover;" src={convertFileSrc(active_image)} alt="Active" />
+        </div>
       {/if}
     {/snippet}
     {#snippet second_sidebar()}
