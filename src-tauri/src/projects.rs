@@ -3,9 +3,28 @@ use std::io;
 use std::path::Path;
 use serde::Serialize;
 
-
-
 use crate::images::ImageInfo;
+
+#[derive(Serialize)]
+pub struct ProjectInfo {
+    pub name: String,
+    pub scan_location: String,
+    pub description: String,
+    pub created_at: Option<f64>,
+    pub updated_at: Option<f64>,
+}
+
+// impl ProjectInfo {
+//     pub fn new(name: String, scan_location: String, description: String) -> Self {
+//         ProjectInfo {
+//             name: name,
+//             scan_location: scan_location,
+//             description: description,
+//             created_at: None,
+//             updated_at: None
+//         }
+//     }
+// }
 
 pub fn get_projects_directory() -> std::path::PathBuf {
     // path::Path(dirs::home_dir());

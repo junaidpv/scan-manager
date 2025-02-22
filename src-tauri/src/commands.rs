@@ -9,6 +9,7 @@ use crate::projects::get_projects_directory;
 use crate::projects::list_directory_names;
 use crate::projects::list_files;
 use crate::projects::ProjectImages;
+use crate::projects::ProjectInfo;
 
 
 
@@ -23,19 +24,33 @@ pub fn create_project(name: String, scan_location: String, description: String, 
     }
     else {
         fs::create_dir_all(project_dir.clone()).ok();
-        let project_info = json::object!{
+
+        let project_info = ProjectInfo {
             name: name,
             scan_location: scan_location,
             description: description,
-            created_at: created_at,
-            updated_at: updated_at,
+            created_at: Some(created_at),
+            updated_at: Some(updated_at),
         };
 
         let project_info_file = project_dir.join("project.json");
 
-        fs::write(project_info_file.into_os_string().into_string().unwrap(), json::stringify(project_info)).expect("Unable to write file");
-        result = true;
-        message = "Project created";
+        let project_ino_json_string = serde_json::to_string(&project_info);
+        if project_ino_json_string.is_ok() {
+            let write_result = fs::write(project_info_file.into_os_string().into_string().unwrap(), project_ino_json_string.ok().unwrap());
+            if write_result.is_ok() {
+                result = true;
+                message = "Project created";
+            }
+            else {
+                result = false;
+                message = "Unable to write project info file";
+            }
+        }
+        else {
+            result = false;
+            message = "Unable to serialize project info";
+        }
     }
 
 
