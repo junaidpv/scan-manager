@@ -1,20 +1,21 @@
 <script lang="ts">
     import { emit } from "@tauri-apps/api/event";
     import { convertFileSrc } from '@tauri-apps/api/core';
+    import { path } from "@tauri-apps/api";
 
-    let {src, alt, name } = $props();
+    let image_info: ImageInfo = $props();
     
     function select_image() {
         emit('image-selected', {
-            src: src,
+            image_info: image_info,
         })
     }
 </script>
 <div>
     <button onclick={select_image}>
     <figure>
-        <img src={convertFileSrc(src)} class="img-thumbnail" alt={alt} />
-        <figcaption>{name}</figcaption>
+        <img src={convertFileSrc(image_info.path)} class="img-thumbnail" alt='' />
+        <figcaption>Test</figcaption>
     </figure>
     </button>
 </div>

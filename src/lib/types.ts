@@ -67,3 +67,11 @@ interface FrameSettings {
     end_x: number | null;
     end_y: number | null;
 }
+
+interface ImageInfo {
+    width: number;
+    height: number;
+    size: number;
+    format: string;
+    path: string;
+}

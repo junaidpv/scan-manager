@@ -8,13 +8,17 @@
   import { openWindow } from "$lib/common";
     import Steps from "$lib/Steps.svelte";
     import StepTools from "$lib/StepTools.svelte";
+    import GridOverlay from "$lib/GridOverlay.svelte";
+    import CropOverlay from "$lib/CropOverlay.svelte";
+    import { path } from "@tauri-apps/api";
 
   let project: ProjectItem | null = $state(null);
   
   let page_url = $state('/main');
 
-  let active_image: string | null = $state(null);
+  let active_image: ImageInfo | null = $state(null);
   let thumbnails: ThumbnailItem[] = $state([]);
+  let image_infos: ImageInfo[] = $state([]);
   let active_step = $state('fix_orientation');
   let active_step_settings = $state({
     deskew_mode: 'manual',
@@ -29,6 +33,7 @@
       end_y: null,
     }
   });
+  let grid_size = $state(20);
 
   function disableParentWindow() {
     document.body.style.pointerEvents = 'none';
@@ -43,16 +48,14 @@
     let response = JSON.parse(response_string);
     console.log(response);
     if (response.result) {
-      thumbnails = [];
+      image_infos = [];
         // thumbnails = response.images;
-        response.images.forEach((image: string) => {
-            thumbnails.push({
-                src: image
-            });
+        response.images.forEach((image_info: ImageInfo) => {
+            image_infos.push(image_info);
         });
     }
     else {
-        thumbnails = [];
+        image_infos = [];
     }
   }
 
@@ -66,7 +69,7 @@
   });
 
   const listen_image_selected = listen('image-selected', (event) => {
-    active_image = (event.payload as { src: string }).src;
+    active_image = (event.payload as { image_info: ImageInfo }).image_info;
   });
 
   listen('step_selected', (event) => {
@@ -125,13 +128,17 @@
     {#snippet  content()}
       <!-- <iframe src={page_url} title="Title"></iframe> -->
       {#if active_image}
-        <div style="height: 100%; display: flex; justify-content: center; align-items: center;">
-          <img style="max-height: 100%; transform: rotate({active_step_settings.rotate_angle}deg) skew({active_step_settings.deskew_value}deg);" src={convertFileSrc(active_image)} alt="Active" />
+        <div style="height: 100%; display: flex; justify-content: center; align-items: center; position: relative;">
+          <div class="image-wrapper" style="max-height: 100%; transform: rotate({active_step_settings.rotate_angle}deg) skew({active_step_settings.deskew_value}deg); position: relative;">
+            <img style="width: 100%;" src={convertFileSrc(active_image.path)} alt="Active" />
+            <CropOverlay />
+          </div>
+          <GridOverlay grid_size={grid_size}  />
         </div>
       {/if}
     {/snippet}
     {#snippet second_sidebar()}
-      <Thumbnails thumbnails={thumbnails} />
+      <Thumbnails image_infos={image_infos} />
     {/snippet}  
   </LayoutDefault>
 </main>
