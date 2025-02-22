@@ -4,7 +4,7 @@
         step: string;
         step_settings: StepSettings;
     }
-    let {step, step_settings}: Props = $props();
+    let {step, step_settings = $bindable()}: Props = $props();
 
     let step_map: { [key: string]: string } = {
         'fix_orientation': 'Roate',
@@ -12,7 +12,7 @@
         'create_frame': 'Create Frame',
         'crop': 'Crop'
     }
-    // Function to rotate the angle by 45 degrees
+    // Function to rotate the angle by 90 degrees
     function rotateAngle(angle: number) {
         step_settings.rotate_angle = (step_settings.rotate_angle + angle) % 360; // Increment and wrap around at 360
     }

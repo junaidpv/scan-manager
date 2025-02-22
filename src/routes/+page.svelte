@@ -120,13 +120,13 @@
     {/snippet}
     {#snippet first_sidebar()}
       <Steps />
-      <StepTools step={active_step} step_settings={active_step_settings}/>
+      <StepTools step={active_step} bind:step_settings={active_step_settings}/>
     {/snippet}
     {#snippet  content()}
       <!-- <iframe src={page_url} title="Title"></iframe> -->
       {#if active_image}
-        <div style="height: 100%;">
-          <img style="max-height: 100%; object-fit: cover;" src={convertFileSrc(active_image)} alt="Active" />
+        <div style="height: 100%; display: flex; justify-content: center; align-items: center;">
+          <img style="max-height: 100%; transform: rotate({active_step_settings.rotate_angle}deg);" src={convertFileSrc(active_image)} alt="Active" />
         </div>
       {/if}
     {/snippet}
