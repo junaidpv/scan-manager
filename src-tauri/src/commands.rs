@@ -3,22 +3,13 @@ use std::path;
 use json;
 use regex::Regex;
 use std::io;
-use std::path::Path;
-use serde::Serialize;
 
 use crate::images::ImageInfo;
+use crate::projects::get_projects_directory;
+use crate::projects::list_directory_names;
+use crate::projects::list_files;
+use crate::projects::ProjectImages;
 
-
-fn get_projects_directory() -> std::path::PathBuf {
-    // path::Path(dirs::home_dir());
-    // fs::create_dir();
-    let home_dir = dirs::home_dir().unwrap();
-    // Prepare path to the projects directory.
-    let projects_dir = home_dir.join("idaf-scan-app").join("projects");
-    fs::create_dir_all(projects_dir.clone()).ok();
-
-    return projects_dir;
-}
 
 
 #[tauri::command(rename_all = "snake_case")]
@@ -54,40 +45,6 @@ pub fn create_project(name: String, scan_location: String, description: String, 
     });
 }
 
-// Get list of directory names in the projects directory.
-fn list_directory_names<P: AsRef<Path>>(path: P) -> io::Result<Vec<String>> {
-    let mut dir_names = Vec::new();
-
-    for entry in fs::read_dir(path)? {
-        let entry = entry?;
-        let path = entry.path();
-
-        if path.is_dir() {
-            if let Some(dir_name) = path.file_name().and_then(|name| name.to_str()) {
-                dir_names.push(dir_name.to_string());
-            }
-        }
-    }
-
-    Ok(dir_names)
-}
-
-fn list_files<P: AsRef<Path>>(path: P) -> io::Result<Vec<String>> {
-    let mut file_names = Vec::new();
-
-    for entry in fs::read_dir(path)? {
-        let entry = entry?;
-        let path = entry.path();
-
-        if path.is_file() {
-            if let Some(file_name) = path.file_name().and_then(|name| name.to_str()) {
-                file_names.push(file_name.to_string());
-            }
-        }
-    }
-
-    Ok(file_names)
-}
 
 /**
  * Get information about the project.
@@ -102,7 +59,6 @@ fn get_project_info(project_name: String) -> io::Result<json::JsonValue> {
 
     Ok(json::parse(&project_info).unwrap())
 }
-
 #[tauri::command]
 pub fn get_projects() -> String {
     let projects_dir = get_projects_directory();
@@ -126,39 +82,6 @@ pub fn get_projects() -> String {
         result: result,
         projects: project_infos
     });
-}
-
-/**
- * Creates a new ProjectImages struct from a given result and images.
- * This will be used to return the images from the project.
- * 
- */
-#[derive(Serialize)]
-struct ProjectImages {
-    /**
-     * The result of the operation.
-     * This will be true if the operation was successful and false if it was not.
-     *  
-     */
-    result: bool,
-    /**
-     * The images of the project.
-     */
-    images: Vec<ImageInfo>
-}
-
-/**
- * Creates a new ProjectImages struct from a given result and images.
- *
- * @param result The result of the operation.
- * @param images The images to be included in the struct.
- * @return A new ProjectImages struct.
- * 
- */
-impl ProjectImages {
-    fn new(result: bool, images: Vec<ImageInfo>) -> Self {
-        ProjectImages { result, images }
-    }
 }
 
 /**
