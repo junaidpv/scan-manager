@@ -1,6 +1,6 @@
-# Tauri + SvelteKit
+# Scan Manager
+This is an application to manage scans of books and manuscripts. It is built using Tauri and SvelteKit.
 
-This template should help get you started developing with Tauri and SvelteKit in Vite.
 
 ## Recommended IDE Setup
 
