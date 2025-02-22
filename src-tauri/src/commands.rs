@@ -8,7 +8,6 @@ use serde::Serialize;
 
 use crate::images::ImageInfo;
 
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 
 fn get_projects_directory() -> std::path::PathBuf {
     // path::Path(dirs::home_dir());
@@ -90,6 +89,11 @@ fn list_files<P: AsRef<Path>>(path: P) -> io::Result<Vec<String>> {
     Ok(file_names)
 }
 
+/**
+ * Get information about the project.
+ * 
+ * @param project_name The name of the project.
+ */
 fn get_project_info(project_name: String) -> io::Result<json::JsonValue> {
     let projects_dir = get_projects_directory();
     let project_dir = projects_dir.join(project_name.to_lowercase());
@@ -124,18 +128,43 @@ pub fn get_projects() -> String {
     });
 }
 
+/**
+ * Creates a new ProjectImages struct from a given result and images.
+ * This will be used to return the images from the project.
+ * 
+ */
 #[derive(Serialize)]
 struct ProjectImages {
+    /**
+     * The result of the operation.
+     * This will be true if the operation was successful and false if it was not.
+     *  
+     */
     result: bool,
+    /**
+     * The images of the project.
+     */
     images: Vec<ImageInfo>
 }
 
+/**
+ * Creates a new ProjectImages struct from a given result and images.
+ *
+ * @param result The result of the operation.
+ * @param images The images to be included in the struct.
+ * @return A new ProjectImages struct.
+ * 
+ */
 impl ProjectImages {
     fn new(result: bool, images: Vec<ImageInfo>) -> Self {
         ProjectImages { result, images }
     }
 }
 
+/**
+ * Get the images of a project.
+ * This will return a list of images that are in the project.
+ */
 #[tauri::command]
 pub fn get_project_images(project_name: String) -> String {
     let project_info = get_project_info(project_name.clone());
