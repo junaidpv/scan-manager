@@ -15,6 +15,7 @@ pub struct ImageInfo {
     size: u64,
     format: String,
     path: String,
+    name: String,
 }
 
 impl ImageInfo {
@@ -27,8 +28,10 @@ impl ImageInfo {
     pub fn new(path: String) -> Self {
         let (width, height) = get_image_size(&path).unwrap();
         let size = fs::metadata(&path).unwrap().len();
+        let file_path = path::Path::new(&path);
+        let name = file_path.file_name().unwrap().to_str().unwrap().to_string();
         let format = path::Path::new(&path).extension().unwrap().to_str().unwrap().to_string();
-        ImageInfo { width, height, size, format, path }
+        ImageInfo { width, height, size, format, path, name }
     }
 }
 

@@ -74,4 +74,5 @@ interface ImageInfo {
     size: number;
     format: string;
     path: string;
+    name: string;
 }
