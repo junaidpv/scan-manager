@@ -44,7 +44,7 @@
                 <label class="btn" for="manual">Manual</label>
                 {#if step_settings.deskew_mode == 'manual'}
                 <div class="pt-2">
-                    <input type="number" class="" min="-45" max="45" step="0.1" value={step_settings.deskew_value}>
+                    <input type="number" class="" min="-45" max="45" step="0.1" bind:value={step_settings.deskew_value}>
                 </div>
                 {/if}
             </div>
