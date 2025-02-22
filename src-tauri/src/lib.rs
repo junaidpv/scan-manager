@@ -1,6 +1,7 @@
 extern crate dirs;
 
 pub mod commands;
+pub mod images;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {

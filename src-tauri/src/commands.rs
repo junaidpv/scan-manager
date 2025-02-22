@@ -4,6 +4,9 @@ use json;
 use regex::Regex;
 use std::io;
 use std::path::Path;
+use serde::Serialize;
+
+use crate::images::ImageInfo;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 
@@ -121,13 +124,25 @@ pub fn get_projects() -> String {
     });
 }
 
+#[derive(Serialize)]
+struct ProjectImages {
+    result: bool,
+    images: Vec<ImageInfo>
+}
+
+impl ProjectImages {
+    fn new(result: bool, images: Vec<ImageInfo>) -> Self {
+        ProjectImages { result, images }
+    }
+}
+
 #[tauri::command]
 pub fn get_project_images(project_name: String) -> String {
     let project_info = get_project_info(project_name.clone());
     let scan_location = path::PathBuf::from( project_info.unwrap()["scan_location"].to_string());
 
     let mut result = true;
-    let mut image_infos: Vec<String> = Vec::new();
+    let mut image_infos: Vec<ImageInfo> = Vec::new();
     let result_call = list_files(scan_location.clone());
     let re = Regex::new(r"^(?i)(.*\.(jpg|jpeg|png|gif|tif))$").unwrap();
     if result_call.is_ok() {
@@ -135,7 +150,9 @@ pub fn get_project_images(project_name: String) -> String {
         for file_name in file_names.iter() {
             if re.is_match(&file_name) {
                 let image_full_path = scan_location.join(file_name);
-                image_infos.push(image_full_path.into_os_string().into_string().unwrap());
+                // image_infos.push(image_full_path.into_os_string().into_string().unwrap());
+                let image_info = ImageInfo::new(image_full_path.into_os_string().into_string().unwrap());
+                image_infos.push(image_info);
             }
         }
     }
@@ -143,8 +160,7 @@ pub fn get_project_images(project_name: String) -> String {
         result = false;
     }
 
-    return json::stringify(json::object!{
-        result: result,
-        images: image_infos
-    });
+    let project_images = ProjectImages::new(result, image_infos);
+
+    return serde_json::to_string(&project_images).expect("{result: false, images: []}");
 }
